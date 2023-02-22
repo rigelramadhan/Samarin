@@ -9,12 +9,12 @@ apply from: '../shared_dependencies.gradle'
 
 android {
     namespace 'com.glorion.samarin'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.glorion.samarin"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -51,4 +51,11 @@ android {
 }
 
 dependencies {
+    implementation project(":core")
+    implementation("io.coil-kt:coil-compose:2.2.0")
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+    implementation "androidx.navigation:navigation-compose:2.5.3"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+    implementation "androidx.compose.material:material-icons-extended:1.3.1"
 }

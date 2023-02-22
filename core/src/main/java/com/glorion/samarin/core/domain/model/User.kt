@@ -1,8 +1,5 @@
 package com.glorion.samarin.core.domain.model
 
-import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
-
 data class User(
     val nat: String,
     val gender: String,
