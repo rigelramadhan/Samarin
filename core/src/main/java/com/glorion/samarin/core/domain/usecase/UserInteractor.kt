@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 class UserInteractor(private val userRepository: IUserRepository) : UserUseCase {
     override fun getRandomUser(): Flow<Resource<User>> = userRepository.getRandomUser()
 
+    override fun getUserById(id: String): Flow<Resource<User>> = userRepository.getUserById(id)
+
     override fun getRandomUsers(results: Int): Flow<Resource<List<User>>> =
         userRepository.getRandomUsers(results)
 }

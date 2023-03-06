@@ -1,5 +1,6 @@
 package com.glorion.samarin.ui.screen.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,35 +10,61 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Flag
-import androidx.compose.material.icons.filled.Male
-import androidx.compose.material.icons.filled.Man
-import androidx.compose.material.icons.filled.Man2
+import androidx.compose.material.icons.outlined.LocationCity
+import androidx.compose.material.icons.outlined.PartyMode
+import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.glorion.samarin.R
+import com.glorion.samarin.core.data.Resource
 import com.glorion.samarin.core.domain.model.User
+import com.glorion.samarin.ui.theme.BluePrimary
 import com.glorion.samarin.ui.theme.SamarinTheme
 import com.glorion.samarin.ui.theme.Teal200
 import com.glorion.samarin.util.Dummy
 
 @Composable
 fun DetailScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: DetailViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.uiState.collectAsState(initial = Resource.Loading())
 
+    when (uiState) {
+        is Resource.Success -> {
+            val data = uiState.data
+            if (data != null) {
+                DetailContent(user = data)
+            } else {
+                Toast.makeText(LocalContext.current, "Not found", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        is Resource.Error -> {
+            Toast.makeText(LocalContext.current, "Error", Toast.LENGTH_SHORT).show()
+        }
+
+        is Resource.Loading -> {
+
+        }
+    }
 }
 
 @Composable
@@ -129,19 +156,35 @@ fun DetailContent(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier
+                        .fillMaxWidth()
                         .padding(16.dp),
                 ) {
+                    Text(
+                        text = stringResource(R.string.personal_information),
+                        style = MaterialTheme.typography.subtitle2,
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .background(color = Color.White, shape = RoundedCornerShape(12.dp))
+                            .padding(horizontal = 32.dp, vertical = 4.dp)
+                            .fillMaxWidth(),
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
                     CardItem(
-                        icon = Icons.Filled.Man2,
-                        text = user.age.toString(),
+                        icon = Icons.Outlined.PartyMode,
+                        text = user.dob,
+                    )
+//                    CardItem(
+//                        icon = if (user.gender == "Male") Icons.Filled.Male else Icons.Filled.Female,
+//                        text = user.gender,
+//                    )
+                    CardItem(
+                        icon = Icons.Outlined.LocationCity,
+                        text = user.location,
                     )
                     CardItem(
-                        icon = Icons.Filled.Male,
-                        text = user.gender,
-                    )
-                    CardItem(
-                        icon = Icons.Filled.Flag,
-                        text = user.nat,
+                        icon = Icons.Outlined.Phone,
+                        text = user.phone,
                     )
                 }
             }
@@ -158,15 +201,14 @@ private fun CardItem(modifier: Modifier = Modifier, icon: ImageVector, text: Str
         Image(
             imageVector = icon,
             contentDescription = stringResource(R.string.age),
+            colorFilter = ColorFilter.tint(BluePrimary),
             modifier = Modifier
-                .weight(1f)
-                .aspectRatio(1/1f)
+                .padding(end = 12.dp)
+                .width(22.dp)
         )
         Text(
             text = text,
             modifier = Modifier
-                .weight(10f)
-                .padding(start = 16.dp)
         )
     }
 }

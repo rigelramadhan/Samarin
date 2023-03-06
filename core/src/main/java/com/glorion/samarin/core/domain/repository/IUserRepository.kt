@@ -7,5 +7,7 @@ import kotlinx.coroutines.flow.Flow
 interface IUserRepository {
     fun getRandomUser(): Flow<Resource<User>>
 
+    fun getUserById(id: String): Flow<Resource<User>>
+
     fun getRandomUsers(results: Int): Flow<Resource<List<User>>>
 }

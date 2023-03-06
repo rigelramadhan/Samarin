@@ -10,6 +10,8 @@ class LocalDataSource(private val userDao: UserDao) {
 
     fun deleteUsers() = userDao.deleteAllUsers()
 
+    fun getUserById(id: String): Flow<List<UserEntity>> = userDao.getUserById(id)
+
     suspend fun insertUser(user: UserEntity) = userDao.insertUser(user)
 
     suspend fun insertUsers(users: List<UserEntity>) = userDao.insertUsers(users)

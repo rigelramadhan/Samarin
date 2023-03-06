@@ -21,6 +21,18 @@ class UserRepository @Inject constructor(
 ) : IUserRepository {
     override fun getRandomUser(): Flow<Resource<User>> = remoteDataSource.getRandomUsers()
 
+    override fun getUserById(id: String): Flow<Resource<User>> {
+        return localDataSource.getUserById(id).map {
+            if (it.isNotEmpty()) {
+                val data = DataMapper.userEntityToUserDomain(it)
+                Resource.Success(data[0])
+            } else {
+                Resource.Error("404")
+            }
+        }
+    }
+
+
     override fun getRandomUsers(results: Int): Flow<Resource<List<User>>> =
         object : NetworkBoundResource<List<User>, List<ResultsItem>>(appExecutors) {
             override fun loadFromDB(): Flow<List<User>> {

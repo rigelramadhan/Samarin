@@ -13,3 +13,5 @@ val WhiteBackground = Color(0xFFF3F3F3)
 val BlackBackground = Color(0xFF131313)
 val WhiteSubBackground1 = Color(0xFFEBEBEB)
 val BlackSubBackground1 = Color(0xFF1B1B1B)
+
+val BluePrimary = Color(0xFF2152FF)
